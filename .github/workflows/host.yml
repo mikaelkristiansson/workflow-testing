@@ -1,0 +1,29 @@
+name: Modify /etc/hosts example
+
+on:
+  pull_request:
+
+jobs:
+  update-hosts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Add custom entries to /etc/hosts
+        run: |
+          echo "127.0.0.1    www.micke-local.se" | sudo tee -a /etc/hosts
+
+      - name: Verify /etc/hosts update
+        run: cat /etc/hosts
+
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: start express server
+        run: |
+          npm install
+          npm run ci
